@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Phishing Email Detection Dashboard</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 30px;
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: white;
+      }
+
+      .container {
+        max-width: 1150px;
+        margin: auto;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 35px;
+      }
+
+      header h1 {
+        color: #38bdf8;
+        font-size: 30px;
+      }
+
+      header p {
+        color: #94a3b8;
+      }
+
+      .card {
+        background: #1e293b;
+        padding: 25px;
+        border-radius: 14px;
+        margin-bottom: 25px;
+      }
+
+      .card h2 {
+        color: #38bdf8;
+        margin-top: 0;
+      }
+
+      label {
+        display: block;
+        margin: 18px 0 8px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 14px;
+        background: #0f172a;
+        color: white;
+        border: 1px solid #475569;
+        border-radius: 8px;
+        outline: none;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: #38bdf8;
+      }
+
+      textarea {
+        height: 150px;
+        resize: vertical;
+      }
+
+      button,
+      .download {
+        display: inline-block;
+        background: #0284c7;
+        color: white;
+        border: none;
+        padding: 13px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      button:hover,
+      .download:hover {
+        background: #0369a1;
+      }
+
+      /* Dashboard Statistics */
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+      }
+
+      .stat-box {
+        background: #0f172a;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid #334155;
+      }
+
+      .stat-box h3 {
+        font-size: 14px;
+        color: #cbd5e1;
+      }
+
+      .stat-box h1 {
+        font-size: 32px;
+        color: #38bdf8;
+        margin-bottom: 5px;
+      }
+
+      .high-box h1 {
+        color: #f87171;
+      }
+
+      .medium-box h1 {
+        color: #fbbf24;
+      }
+
+      .low-box h1 {
+        color: #4ade80;
+      }
+
+      /* Analysis Result */
+
+      .result {
+        padding: 20px;
+        border-radius: 10px;
+        background: #0f172a;
+        border: 1px solid #334155;
+        margin-top: 20px;
+        overflow-wrap: anywhere;
+      }
+
+      .HIGH {
+        color: #f87171;
+      }
+
+      .MEDIUM {
+        color: #fbbf24;
+      }
+
+      .LOW {
+        color: #4ade80;
+      }
+
+      .risk-score {
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      li {
+        margin: 10px 0;
+        overflow-wrap: anywhere;
+      }
+
+      .url-card {
+        background: #334155;
+        border-radius: 10px;
+        padding: 18px;
+        margin-top: 15px;
+        overflow-wrap: anywhere;
+      }
+
+      .url-card h3 {
+        color: #38bdf8;
+      }
+
+      /* Scan History */
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        min-width: 650px;
+      }
+
+      th,
+      td {
+        padding: 14px;
+        border-bottom: 1px solid #475569;
+        text-align: left;
+      }
+
+      th {
+        color: #38bdf8;
+      }
+
+      .empty {
+        color: #94a3b8;
+        text-align: center;
+        padding: 20px;
+      }
+
+      footer {
+        text-align: center;
+        color: #64748b;
+        padding: 20px;
+        font-size: 13px;
+      }
+
+      @media (max-width: 750px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        body {
+          padding: 12px;
+        }
+
+        .card {
+          padding: 16px;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Header -->
+
+      <header>
+        <h1>PHISHING EMAIL DETECTION</h1>
+        <p>AI-Based Email Security Analyzer</p>
+      </header>
+
+      <!-- Dashboard Statistics -->
+
+      <div class="card">
+        <h2>Security Dashboard</h2>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <h3>Total Scans</h3>
+            <h1>{{ stats.total }}</h1>
+          </div>
+
+          <div class="stat-box high-box">
+            <h3>High Risk</h3>
+            <h1>{{ stats.high }}</h1>
+          </div>
+
+          <div class="stat-box medium-box">
+            <h3>Medium Risk</h3>
+            <h1>{{ stats.medium }}</h1>
+          </div>
+
+          <div class="stat-box low-box">
+            <h3>Low Risk</h3>
+            <h1>{{ stats.low }}</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email Analysis Form -->
+
+      <div class="card">
+        <h2>Analyze Email</h2>
+
+        <form method="POST">
+          <label>Sender Email</label>
+
+          <input
+            type="text"
+            name="sender"
+            value="{{ sender }}"
+            placeholder="example@gmail.com"
+            required
+          />
+
+          <label>Email Subject</label>
+
+          <input
+            type="text"
+            name="subject"
+            value="{{ subject }}"
+            placeholder="Enter email subject"
+            required
+          />
+
+          <label>Email Body</label>
+
+          <textarea
+            name="body"
+            placeholder="Paste email content here..."
+            required
+          >
+{{ body }}</textarea
+          >
+
+          <button type="submit">Analyze Email</button>
+        </form>
+      </div>
+
+      <!-- Overall Analysis Result -->
+
+      {% if result %}
+
+      <div class="card">
+        <h2>Analysis Result</h2>
+
+        <div class="result">
+          <h3>
+            Risk Level:
+
+            <span class="{{ result.risk_level }}">
+              {{ result.risk_level }}
+            </span>
+          </h3>
+
+          <p class="risk-score">Risk Score: {{ result.risk_score }}/100</p>
+
+          <h3>Security Findings</h3>
+
+          <ul>
+            {% for finding in result.findings %}
+
+            <li>{{ finding }}</li>
+
+            {% else %}
+
+            <li>No configured warning indicators detected.</li>
+
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Detected URLs -->
+
+        <h2 style="margin-top: 30px">URL Security Analysis</h2>
+
+        {% for item in result.url_results %}
+
+        <div class="url-card">
+          <h3>Detected URL</h3>
+
+          <p>{{ item.url }}</p>
+
+          <h3>
+            Risk Level:
+
+            <span class="{{ item.risk_level }}"> {{ item.risk_level }} </span>
+          </h3>
+
+          <p>
+            URL Risk Score:
+            <strong>{{ item.risk_score }}/100</strong>
+          </p>
+
+          <h3>URL Security Findings</h3>
+
+          <ul>
+            {% for warning in item.findings %}
+
+            <li>{{ warning }}</li>
+
+            {% else %}
+
+            <li>No configured warning indicators detected.</li>
+
+            {% endfor %}
+          </ul>
+        </div>
+
+        {% else %}
+
+        <div class="url-card">
+          <p>No URLs detected in this email.</p>
+        </div>
+
+        {% endfor %}
+      </div>
+
+      {% endif %}
+
+      <!-- Scan History -->
+
+      <div class="card">
+        <h2>Scan History</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Sender</th>
+                <th>Risk Level</th>
+                <th>Score</th>
+                <th>Report</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for scan in history %}
+
+              <tr>
+                <td>{{ scan.date }}</td>
+
+                <td>{{ scan.sender }}</td>
+
+                <td class="{{ scan.risk_level }}">{{ scan.risk_level }}</td>
+
+                <td>{{ scan.risk_score }}/100</td>
+
+                <td>
+                  <a
+                    class="download"
+                    href="{{ url_for('download_report', scan_id=scan.id) }}"
+                  >
+                    Download
+                  </a>
+                </td>
+              </tr>
+
+              {% else %}
+
+              <tr>
+                <td colspan="5" class="empty">No scan history available.</td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer -->
+
+      <footer>
+        Phishing Email Detection System
+        <br />
+        AI-Based Email Security Dashboard
+      </footer>
+    </div>
+  </body>
+</html>

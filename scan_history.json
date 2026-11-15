@@ -1,0 +1,55 @@
+[
+    {
+        "id": 1794758806502326,
+        "sender": "support@example.com",
+        "subject": "Urgent Action Required",
+        "risk_level": "HIGH",
+        "risk_score": 70,
+        "findings": [
+            "Suspicious keyword: verify your account",
+            "Suspicious keyword: urgent action",
+            "URL warning: http://192.168.1.1/login/verify",
+            "URL does not use HTTPS",
+            "URL uses an IP address instead of a domain",
+            "Sensitive keyword in URL: login",
+            "Sensitive keyword in URL: verify"
+        ],
+        "urls_found": [
+            "http://192.168.1.1/login/verify"
+        ],
+        "url_results": [
+            {
+                "url": "http://192.168.1.1/login/verify",
+                "risk_score": 50,
+                "risk_level": "HIGH",
+                "findings": [
+                    "URL does not use HTTPS",
+                    "URL uses an IP address instead of a domain",
+                    "Sensitive keyword in URL: login",
+                    "Sensitive keyword in URL: verify"
+                ]
+            }
+        ],
+        "date": "15-11-2026 09:36:46 PM"
+    },
+    {
+        "id": 1794758718591298,
+        "sender": "support@example.com",
+        "subject": "Urgent Action Required",
+        "risk_level": "HIGH",
+        "risk_score": 70,
+        "findings": [
+            "Suspicious keyword: verify your account",
+            "Suspicious keyword: urgent action",
+            "URL warning: http://192.168.1.1/login/verify",
+            "URL does not use HTTPS",
+            "URL uses an IP address instead of a domain",
+            "Sensitive keyword in URL: verify",
+            "Sensitive keyword in URL: login"
+        ],
+        "urls_found": [
+            "http://192.168.1.1/login/verify"
+        ],
+        "date": "15-11-2026 09:35:18 PM"
+    }
+]
